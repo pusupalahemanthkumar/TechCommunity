@@ -1,10 +1,168 @@
 /* Importing Google Font Here. */
 @import url("https://fonts.googleapis.com/css?family=Roboto");
+/* Main styling Here */
 body {
   margin: 0;
   padding: 0;
   font-family: "Roboto", sans-serif;
 }
-a{
+a {
   text-decoration: none;
+}
+
+/* Utility Classes Here */
+.container {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 2rem;
+  overflow: hidden;
+}
+.text-center {
+  text-align: center;
+}
+.text-primary {
+  color: #37a08e;
+}
+
+.py-1 {
+  padding: 1.5rem 0;
+}
+.py-2 {
+  padding: 2rem 0;
+}
+.py-3 {
+  padding: 3rem 0;
+}
+
+.p-1 {
+  padding: 1.5rem;
+}
+.p-2 {
+  padding: 2rem;
+}
+.p-3 {
+  padding: 3rem;
+}
+/* Card Styling Here */
+.card {
+  background: #f4f4f4;
+  padding: 1rem;
+  border-radius: 5px;
+  max-width: 40rem;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.intro-img {
+  width: 10rem;
+  height: 10rem;
+}
+.intro-img img {
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* Post  Styling Here*/
+.post {
+  max-width: 65rem;
+}
+.post-content {
+  margin-left: 1rem;
+}
+.post-control-section {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.red {
+  background: red;
+}
+
+/* Comments Styling Here. */
+.comment{
+  background: #fff;
+  padding: 1rem;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  max-width: 60rem;
+  border-bottom: 2px #ccc dotted;
+
+}
+.comment-img{
+  width: 5rem;
+  height: 5rem;
+
+}
+.comment-img img{
+  height: 100%;
+  border-radius: 50%;
+
+}
+/* Form  Styling Here.*/
+
+.form-wrap {
+  background: #fff;
+  padding: 15px 25px;
+  color: #333;
+}
+
+.form-wrap h1,
+.form-wrap p {
+  text-align: center;
+}
+
+.form-wrap .form-group {
+  margin-top: 15px;
+}
+
+.form-wrap .form-group label {
+  display: block;
+  color: #666;
+}
+
+.form-wrap .form-group input,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: #ddd 1px solid;
+  border-radius: 5px;
+}
+
+.form-wrap button {
+  display: block;
+
+  padding: 10px 2rem;
+  margin: auto;
+  margin-top: 20px;
+  background: #49c1a2;
+  color: #fff;
+  cursor: pointer;
+}
+
+.form-wrap button:hover {
+  background: #37a08e;
+}
+
+.form-wrap .bottom-text {
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 10px;
+}
+
+footer a {
+  color: #49c1a2;
+}
+
+@media (max-width: 768px) {
+  .card {
+    max-width: 20rem;
+    flex-direction: column;
+  }
 }

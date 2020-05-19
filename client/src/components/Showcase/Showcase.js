@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import classes from "./Showcase.module.css";
 
 const Showcase = (props) => {
@@ -7,12 +9,15 @@ const Showcase = (props) => {
       <div className={classes.ShowcaseContent}>
         <h1 className={classes.Lheading}>Welcome To TechCommunity</h1>
         <div className={classes.ActionsContainer}>
-          <a href="/" className={classes.Btn} >
+          <Link to="/login" className={classes.Btn}>
             Login
-          </a>
-          <a href="/" className={[classes.Btn,classes.BtnWhite].join(" ")}>
+          </Link>
+          <Link
+            to="/register"
+            className={[classes.Btn, classes.BtnWhite].join(" ")}
+          >
             Register
-          </a>
+          </Link>
         </div>
       </div>
     </div>
