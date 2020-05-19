@@ -1,9 +1,18 @@
 // Importing Required Files And Packages Here.
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+
+import { setAlert } from "../../actions/alert";
+import { register } from "../../actions/auth";
+import Alert from "../Alert/Alert";
 
 // Defining Register Component Here.
 class Register extends Component {
+  constructor(props) {
+    super(props);
+  }
   state = {
     firstName: "",
     lastName: "",
@@ -19,20 +28,30 @@ class Register extends Component {
   };
   onSubmitHandler = (e) => {
     e.preventDefault();
-    if(this.state.password !==this.state.pasword2){
-     return  console.log("Passwords don't match.")
+    if (this.state.password !== this.state.pasword2) {
+      this.props.setAlert("Passwords do not match.", "danger");
+
+      return console.log("Passwords don't match.");
     }
     const authData = {
+      name: this.state.firstName +this.state.lastName,
       email: this.state.email,
       password: this.state.password,
     };
     console.log(authData);
+    this.props.register(authData);
+
   };
   render() {
+    // If Authenticated
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/dashboard" />;
+    }
     return (
       <div className="container py-1">
         <div className="form-wrap">
           <h1>Sign Up</h1>
+          <Alert />
           <p>It's free and only takes a minute</p>
           <form onSubmit={this.onSubmitHandler}>
             <div className="form-group">
@@ -109,4 +128,17 @@ class Register extends Component {
   }
 }
 
-export default Register;
+Register.propTypes ={
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated :PropTypes.bool,
+};
+
+
+const mapStateToProps = (state) => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+  };
+};
+
+export default connect(mapStateToProps, { setAlert, register })(Register);

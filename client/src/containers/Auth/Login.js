@@ -1,6 +1,11 @@
 // Importing Required Files And Packages Here.
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { Link,Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import Alert from "../Alert/Alert"
+
+import { login } from "../../actions/auth";
 
 // Defining Login Component Here.
 class Login extends Component {
@@ -21,13 +26,19 @@ class Login extends Component {
       password: this.state.password,
     };
     console.log(authData);
+    this.props.login(authData);
   };
 
   render() {
+      // Redirect if logged in
+  if(this.props.isAuthenticated){
+    return <Redirect to="/dashboard" />
+  }
     return (
       <div className="container py-1">
         <div className="form-wrap">
           <h1>Login</h1>
+          <Alert />
           <form onSubmit={this.onSubmitHandler}>
             <div className="form-group">
               <label htmlFor="email">Email</label>
@@ -69,4 +80,16 @@ class Login extends Component {
   }
 }
 
-export default Login;
+Login.propTypes = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated :PropTypes.bool,
+};
+
+const mapStateToProps=(state)=>{
+  return {
+    isAuthenticated:state.auth.isAuthenticated
+  }
+
+}
+
+export default connect(mapStateToProps, { login })(Login);

@@ -63,6 +63,18 @@ a {
   border-radius: 50%;
 }
 
+/* Alert Styling Here */
+.alert{
+  text-align: center;
+  padding: 0.6rem;
+}
+.alert-danger{
+  background: rgb(201, 103, 103);
+}
+.alert-success{
+  background: rgb(121, 121, 206);
+}
+
 /* Post  Styling Here*/
 .post {
   max-width: 65rem;
