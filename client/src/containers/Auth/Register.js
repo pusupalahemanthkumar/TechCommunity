@@ -1,5 +1,5 @@
 // Importing Required Files And Packages Here.
-import React, { Component } from "react";
+import React, { Component,Fragment } from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
@@ -7,12 +7,11 @@ import PropTypes from "prop-types";
 import { setAlert } from "../../actions/alert";
 import { register } from "../../actions/auth";
 import Alert from "../Alert/Alert";
+import Spinner from "../../components/UI/Spinner/Spinner";
 
 // Defining Register Component Here.
 class Register extends Component {
-  constructor(props) {
-    super(props);
-  }
+
   state = {
     firstName: "",
     lastName: "",
@@ -47,9 +46,9 @@ class Register extends Component {
     if (this.props.isAuthenticated) {
       return <Redirect to="/dashboard" />;
     }
-    return (
-      <div className="container py-1">
-        <div className="form-wrap">
+    let form =(
+      <Fragment>
+      <div className="form-wrap">
           <h1>Sign Up</h1>
           <Alert />
           <p>It's free and only takes a minute</p>
@@ -123,6 +122,16 @@ class Register extends Component {
             Already have an account? <Link to="/login">Login Here</Link>
           </p>
         </footer>
+        </Fragment>
+
+    );
+    if(this.props.loading){
+      form=<Spinner />
+    }
+    return (
+      <div className="container py-1">
+        {form}
+        
       </div>
     );
   }
@@ -132,12 +141,14 @@ Register.propTypes ={
   setAlert: PropTypes.func.isRequired,
   register: PropTypes.func.isRequired,
   isAuthenticated :PropTypes.bool,
+  loading : PropTypes.bool,
 };
 
 
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
+    loading : state.auth.loading
   };
 };
 

@@ -1,74 +1,76 @@
 // Importing Required Files And Packages Here.
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import axios from "axios";
+import {connect} from "react-redux";
+import Alert from "../Alert/Alert";
+import {setAlert} from "../../actions/alert";
 
 import Comment from "../../components/Comment/Comment";
 import Post from "../../components/Post/Post";
+import Spinner from "../../components/UI/Spinner/Spinner";
+
+const token = localStorage.getItem("token");
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+    "x-auth-token": token,
+  },
+};
+
 // Defining SinglePost Component Here.
-class SinglePost extends Component {
+class SinglePost extends PureComponent {
   state = {
     text: "",
-    comments: [
-      {
-        _id: 1,
-        avatar:
-          "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-        name: "Hemanth Kumar",
-        text: `
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod
-            eveniet asperiores ullam, quis culpa magni ad molestiae officia ea
-            atque!`,
-      },
-      {
-        _id: 2,
-        avatar:
-          "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-        name: "Sanjay",
-        text: `
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod
-            eveniet asperiores ullam, quis culpa magni ad molestiae officia ea
-            atque!`,
-      },
-    ],
-    post: {
-      _id: 1,
-      avatar:
-        "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-      name: "Hemanth Kumar",
-      text: `
-         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod
-         eveniet asperiores ullam, quis culpa magni ad molestiae officia ea
-         atque!
-         `,
-      likes: [
-        {
-          user: "2",
-          _id: "123",
-        },
-        {
-          user: "2",
-          _id: "124",
-        },
-      ],
-      likesCount: 10,
-      commentsCount: 8,
-    },
+    post: null,
+    loading: true,
+  };
+  componentDidMount() {
+    this.fetchData();
+  }
+  // Utility Methods Here
+  fetchData = async () => {
+    this.setState({
+      loading: true,
+    });
+    try {
+      const res = await axios.get(
+        `/api/posts/${this.props.match.params.postId}`,
+        config
+      );
+      this.setState({
+        post: res.data,
+        loading: false,
+      });
+    } catch (err) {
+      this.props.history.replace("/posts");
+      console.log(err.response);
+      this.setState({
+        loading: false,
+      });
+    }
   };
 
-  onSubmitHandler = (e) => {
+  onSubmitHandler = async (e) => {
     e.preventDefault();
     const commentData = {
-      _id: Math.random().toString(),
-      avatar:
-        "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-      name: "Hemanth Kumar",
       text: this.state.text,
     };
-    console.log(commentData);
-    const updatedState= this.state.comments;
-    updatedState.unshift(commentData);
-    this.setState({
-        comments: updatedState
-    })
+    try {
+      const res = await axios.post(
+        "/api/posts/comment/" + this.state.post._id,
+        commentData,
+        config
+      );
+      const updatedPost = { ...this.state.post };
+      updatedPost.comments = res.data;
+      this.setState({
+        post: updatedPost,
+        text: ""
+      });
+      this.props.setAlert("You add a comment", "success");
+    } catch (err) {
+      console.log(err.response.data);
+    }
   };
   onChangeHandler = (e) => {
     // console.log(e.target.value);
@@ -77,11 +79,19 @@ class SinglePost extends Component {
     });
   };
   render() {
+    let comments = null;
+    console.log(this.state.post);
+    if (!this.state.loading && this.state.post && this.state.post.comments) {
+      comments = this.state.post.comments.map((comment, index) => {
+        return <Comment key={comment._id} comment={comment} />;
+      });
+    }
     return (
       <div className="container py-1">
         <br />
         <br />
-        <Post post={this.state.post} />
+        {!this.state.loading ? <Post post={this.state.post} /> : <Spinner />}
+
         <br />
         <div className="form-wrap">
           <h2>Add Comment</h2>
@@ -103,13 +113,12 @@ class SinglePost extends Component {
           </form>
         </div>
         <br />
+        <Alert />
         <h3>Comments</h3>
-        {this.state.comments.map((comment, index) => {
-          return <Comment key={comment._id} comment={comment} />;
-        })}
+        {comments}
       </div>
     );
   }
 }
 
-export default SinglePost;
+export default connect(null,{setAlert})(SinglePost)

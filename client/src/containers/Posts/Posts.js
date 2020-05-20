@@ -1,81 +1,87 @@
 // Importing Required Files And Packages Here.
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
+import axios from "axios";
+import { connect } from "react-redux";
 
 import Post from "../../components/Post/Post";
+import Spinner from "../../components/UI/Spinner/Spinner";
+import { setAlert } from "../../actions/alert";
+import Alert from "../Alert/Alert";
+
+const token = localStorage.getItem("token");
+const config = {
+  headers: {
+    "Content-Type": "application/json",
+    "x-auth-token": token,
+  },
+};
+
 // Defining Posts Component Here.
-class Posts extends Component {
+class Posts extends PureComponent {
   state = {
     text: "",
-    posts: [
-      {
-        _id: "1",
-        avatar:
-          "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-        name: "Hemanth kumar",
-        text: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod
-                eveniet asperiores ullam, quis culpa magni ad molestiae officia ea
-                atque!`,
-        likes: [
-          {
-            user: "1",
-            _id: "123",
-          },
-          {
-            user: "2",
-            _id: "124",
-          },
-        ],
-        likesCount: 4,
-        commentsCount: 5,
-      },
-      {
-        _id: "2",
-        avatar:
-          "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-        name: "Hemanth kumar",
-        text: `Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quod
-                eveniet asperiores ullam, quis culpa magni ad molestiae officia ea
-                atque!`,
-        likes: [
-          {
-            user: "2",
-            _id: "123",
-          },
-          {
-            user: "2",
-            _id: "124",
-          },
-        ],
-        likesCount: 10,
-        commentsCount: 8,
-      },
-    ],
+    posts: null,
+    loading: true,
+    error: false,
   };
 
+  async componentDidMount() {
+    console.log("fetch stated..");
+    await this.fetchData();
+    console.log("fetched Data.");
+  }
+
   // Utility Methods Here
-  onSubmitHandler = (e) => {
+  fetchData = async () => {
+    console.log("In fetchData");
+    this.setState({
+      loading: true,
+    });
+    config.headers["x-auth-token"]=this.props.token;
+    console.log(config);
+    try {
+      const res = await axios.get("/api/posts", config);
+      this.setState({
+        posts: res.data,
+        loading: false,
+        error: false,
+      });
+    } catch (err) {
+      console.log(err.response.data.error);
+      this.props.setAlert("Couldn't load posts. Reload the page", "danger");
+
+      this.setState({
+        loading: false,
+        error: true,
+      });
+    }
+  };
+
+  onSubmitHandler = async (e) => {
     e.preventDefault();
     const postData = {
-      _id: Math.random().toString(),
-      avatar:
-        "https://mk0abtastybwtpirqi5t.kinstacdn.com/wp-content/uploads/anthony-brebion.jpg",
-      name: "Hemanth kumar",
       text: this.state.text,
-      likes: [
-          {
-              user:"1",
-              _id:"34"
-          }
-      ],
-      likesCount: 0,
-      commentsCount: 0,
     };
     console.log(postData);
-    const updatedPosts = this.state.posts;
-    updatedPosts.unshift(postData);
-    this.setState({
-      posts: updatedPosts,
-    });
+    try {
+      const res = await axios.post("api/posts", postData, config);
+      const updatedPosts = [...this.state.posts];
+      updatedPosts.unshift(res.data);
+
+      this.setState({
+        text: "",
+        posts: updatedPosts,
+        error: false,
+      });
+      this.props.setAlert("You created new posts ", "success");
+    } catch (err) {
+      this.props.setAlert(
+        "Couldn't add posts. Try again after sometime. ",
+        "danger"
+      );
+
+      console.log(err.response);
+    }
   };
   onChangeHandler = (e) => {
     // console.log(e.target.value);
@@ -83,17 +89,94 @@ class Posts extends Component {
       text: e.target.value,
     });
   };
-  viewHandler=(postId)=>{
-      console.log(postId);
-      this.props.history.push("/posts/"+postId);
-
-  }
-  likeHandler=(postId)=>{
-    console.log(postId,"Post Liked");
-
-  }
+  viewHandler = (postId) => {
+    console.log(postId);
+    this.props.history.push("/posts/" + postId);
+  };
+  likeHandler = async (postId) => {
+    try {
+      const res = await axios.put("api/posts/like/" + postId, config);
+      const postIndex = this.state.posts.findIndex((post, index) => {
+        return post._id === postId;
+      });
+      const post = { ...this.state.posts[postIndex] };
+      post.likes = res.data;
+      const updatedPosts = [...this.state.posts];
+      updatedPosts[postIndex] = post;
+      this.setState({
+        posts: updatedPosts,
+      });
+    } catch (err) {
+      if (err.response.data.msg === "Post already liked") {
+        return this.props.setAlert("You already liked post.", "success");
+      } else {
+        this.props.setAlert("some error occured.", "danger");
+        console.log(err.response.error.msg);
+      }
+    }
+  };
+  unLikeHandler = async (postId) => {
+    try {
+      const res = await axios.put("api/posts/unlike/" + postId, config);
+      const postIndex = this.state.posts.findIndex((post, index) => {
+        return post._id === postId;
+      });
+      const post = { ...this.state.posts[postIndex] };
+      post.likes = res.data;
+      const updatedPosts = [...this.state.posts];
+      updatedPosts[postIndex] = post;
+      this.setState({
+        posts: updatedPosts,
+      });
+    } catch (err) {
+      if ((err.response.data.msg = "Post has not yet been liked")) {
+        console.log("Post has not yet been liked");
+        return;
+      } else {
+        this.props.setAlert("some error occured.", "danger");
+        console.log(err.response);
+      }
+    }
+  };
+  deleteHandler = async (postId) => {
+    try {
+      await axios.delete("api/posts/" + postId, config);
+      const updatedPosts = this.state.posts.filter((post, index) => {
+        return post._id !== postId;
+      });
+      this.setState({
+        posts: updatedPosts,
+      });
+      this.props.setAlert("You deleted a post.", "success");
+    } catch (err) {
+      this.props.setAlert("some error occured.", "danger");
+      console.log(err.response);
+    }
+  };
 
   render() {
+    let posts = null;
+    if (this.state.posts) {
+      posts = this.state.posts.map((post, index) => {
+        return (
+          <Post
+            key={post._id}
+            post={post}
+            likeHandler={() => this.likeHandler(post._id)}
+            unLikeHandler={() => this.unLikeHandler(post._id)}
+            viewHandler={() => this.viewHandler(post._id)}
+            deleteHandler={() => this.deleteHandler(post._id)}
+          />
+        );
+      });
+    }
+
+    if (this.state.loading) {
+      posts = <Spinner />;
+    }
+    // if (this.state.error) {
+    //   posts = <p>Couldn't Load. Try again after sometime.</p>;
+    // }
     return (
       <div className="container py-1">
         <div className="form-wrap">
@@ -116,14 +199,16 @@ class Posts extends Component {
           </form>
         </div>
         <br />
-        {this.state.posts.map((post, index) => {
-          return <Post key={post._id} post={post} 
-          likeHandler={()=>this.likeHandler(post._id)}
-          viewHandler={()=>this.viewHandler(post._id)} />;
-        })}
+        <Alert />
+        {posts}
       </div>
     );
   }
 }
+const mapStateToProps=(state)=>{
+  return {
+    token :state.auth.token
+  }
+}
 
-export default Posts;
+export default connect(mapStateToProps, { setAlert })(Posts);

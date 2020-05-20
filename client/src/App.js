@@ -1,7 +1,10 @@
 // Importing Required Files And Packages Here.
 import React, { Component, Fragment } from "react";
-import { Route, Switch } from "react-router-dom";
+import {  Switch } from "react-router-dom";
+// import { connect } from "react-redux";
 
+import UnAuthenticatedRoute from "./containers/routing/UnAuthenticatedRoute";
+import PrivateRoute from "./containers/routing/PrivateRoute";
 import Layout from "./hoc/Layout/Layout";
 import Showcase from "./components/Showcase/Showcase";
 import Login from "./containers/Auth/Login";
@@ -11,8 +14,8 @@ import SinglePost from "./containers/Posts/SinglePost";
 import Dashboard from "./containers/Dashboard/Dashboard";
 import setAuthToken from "./utils/setAuthToken";
 import store from "./store";
-import { loadUser, } from "./actions/auth";
-
+import { loadUser } from "./actions/auth";
+// import auth from "./reducers/auth";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -35,12 +38,14 @@ class App extends Component {
       <Fragment>
         <Layout>
           <Switch>
-            <Route exact path="/dashboard" component={Dashboard} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/posts" component={Posts} />
-            <Route exact path="/posts/:postId" component={SinglePost} />
-            <Route exact path="/" component={Showcase} />
+            <PrivateRoute exact path="/dashboard" component={Dashboard} />
+            
+            <UnAuthenticatedRoute exact path="/login" component={Login} />
+            <UnAuthenticatedRoute exact path="/register" component={Register} />
+            <UnAuthenticatedRoute exact path="/" component={Showcase} />
+
+            <PrivateRoute exact path="/posts/:postId" component={SinglePost} />
+            <PrivateRoute exact path="/posts" component={Posts} />
           </Switch>
         </Layout>
       </Fragment>
