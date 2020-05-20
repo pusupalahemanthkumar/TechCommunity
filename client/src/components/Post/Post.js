@@ -29,7 +29,7 @@ const Post = (props) => {
         <div className="intro-img">
           <img src={props.post.avatar} alt={props.post.name} />
         </div>
-        <h3>{props.post.name}</h3>
+        <h3 style={{textAlign:"center"}}>{props.post.name}</h3>
       </div>
       <div className="post-content">
         <p>{props.post.text}</p>
@@ -57,6 +57,7 @@ const Post = (props) => {
             </span>
           ) : null}
         </div>
+
       </div>
     </div>
   );

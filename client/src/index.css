@@ -104,8 +104,8 @@ a {
 
 }
 .comment-img{
-  width: 5rem;
-  height: 5rem;
+  width: 2rem;
+  height: 2rem;
 
 }
 .comment-img img{
@@ -172,9 +172,13 @@ footer a {
   color: #49c1a2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 500px) {
   .card {
     max-width: 20rem;
     flex-direction: column;
+  }
+  .comment{
+    max-width: 20rem;
+    
   }
 }

@@ -1,9 +1,9 @@
 // Importing Required Files And Packages Here.
 import React, { PureComponent } from "react";
 import axios from "axios";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import Alert from "../Alert/Alert";
-import {setAlert} from "../../actions/alert";
+import { setAlert } from "../../actions/alert";
 
 import Comment from "../../components/Comment/Comment";
 import Post from "../../components/Post/Post";
@@ -33,6 +33,8 @@ class SinglePost extends PureComponent {
       loading: true,
     });
     try {
+      config.headers["x-auth-token"] = this.props.token;
+      console.log(config);
       const res = await axios.get(
         `/api/posts/${this.props.match.params.postId}`,
         config
@@ -56,6 +58,7 @@ class SinglePost extends PureComponent {
       text: this.state.text,
     };
     try {
+      config.headers["x-auth-token"] = this.props.token;
       const res = await axios.post(
         "/api/posts/comment/" + this.state.post._id,
         commentData,
@@ -65,7 +68,7 @@ class SinglePost extends PureComponent {
       updatedPost.comments = res.data;
       this.setState({
         post: updatedPost,
-        text: ""
+        text: "",
       });
       this.props.setAlert("You add a comment", "success");
     } catch (err) {
@@ -78,19 +81,92 @@ class SinglePost extends PureComponent {
       text: e.target.value,
     });
   };
+
+  deleteCommentHandler = async (commentId) => {
+    const postId = this.state.post._id;
+    try {
+      config.headers["x-auth-token"] = this.props.token;
+      const res = await axios.delete(
+        `/api/posts/comment/${postId}/${commentId}`,
+        config
+      );
+      const updatedPost = { ...this.state.post };
+      updatedPost.comments = res.data;
+      this.setState({
+        post: updatedPost,
+      });
+
+      this.props.setAlert("You deleted a comment", "success");
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+  likeHandler = async () => {
+    const postId = this.state.post._id;
+    try {
+      config.headers["x-auth-token"] = this.props.token;
+      const res = await axios.put(`/api/posts/like/${postId}/`, config);
+      const updatedPost = { ...this.state.post };
+      updatedPost.likes = res.data;
+      this.setState({
+        post: updatedPost,
+      });
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+  unLikeHandler = async () => {
+    const postId = this.state.post._id;
+    try {
+      config.headers["x-auth-token"] = this.props.token;
+      const res = await axios.put(`/api/posts/unlike/${postId}/`, config);
+      const updatedPost = { ...this.state.post };
+      updatedPost.likes = res.data;
+      this.setState({
+        post: updatedPost,
+      });
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
+  deleteHandler = async () => {
+    const postId = this.state.post._id;
+    try {
+      config.headers["x-auth-token"] = this.props.token;
+      await axios.delete(`/api/posts/${postId}/`, config);
+      this.props.setAlert("You Deleted a Post", "success");
+      this.props.history.replace("/posts");
+    } catch (err) {
+      console.log(err.response.data);
+    }
+  };
   render() {
     let comments = null;
-    console.log(this.state.post);
     if (!this.state.loading && this.state.post && this.state.post.comments) {
       comments = this.state.post.comments.map((comment, index) => {
-        return <Comment key={comment._id} comment={comment} />;
+        return (
+          <Comment
+            key={comment._id}
+            comment={comment}
+            deleteCommentHandler={() => this.deleteCommentHandler(comment._id)}
+          />
+        );
       });
     }
     return (
       <div className="container py-1">
         <br />
         <br />
-        {!this.state.loading ? <Post post={this.state.post} /> : <Spinner />}
+        {!this.state.loading ? (
+          <Post
+            post={this.state.post}
+            likeHandler={this.likeHandler}
+            unLikeHandler={this.unLikeHandler}
+            deleteHandler={this.deleteHandler}
+          />
+        ) : (
+          <Spinner />
+        )}
 
         <br />
         <div className="form-wrap">
@@ -120,5 +196,10 @@ class SinglePost extends PureComponent {
     );
   }
 }
+const mapStateToProps = (state) => {
+  return {
+    token: state.auth.token,
+  };
+};
 
-export default connect(null,{setAlert})(SinglePost)
+export default connect(mapStateToProps, { setAlert })(SinglePost);
