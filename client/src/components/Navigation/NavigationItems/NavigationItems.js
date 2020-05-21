@@ -12,6 +12,7 @@ const navigationItems = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <Fragment>
       <NavigationItem link="/dashboard">Dashboard</NavigationItem>
+      <NavigationItem link="/developers">Developers</NavigationItem>
       <NavigationItem link="/posts">Posts</NavigationItem>
       <NavigationItem link="/posts" onClick={logout}>
         <i className="fas fa-sign-out-alt"></i>{" "}
@@ -22,6 +23,7 @@ const navigationItems = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = (
     <Fragment>
       <NavigationItem link="/">Home</NavigationItem>
+      <NavigationItem link="/developers">Developers</NavigationItem>
       <NavigationItem link="/login">Login</NavigationItem>
       <NavigationItem link="/register">SignUp</NavigationItem>
     </Fragment>

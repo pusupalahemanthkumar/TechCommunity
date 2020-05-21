@@ -19,6 +19,7 @@ app.use(express.json({ extended: true }));
 app.use("/api/users", require("./routes/api/user"));
 app.use("/api/auth", require("./routes/api/auth"));
 app.use("/api/posts",require("./routes/api/post"));
+app.use("/api/profile",require("./routes/api/profile"));
 
 // Setting Listen Handler Here.
 app.listen(PORT, () => {

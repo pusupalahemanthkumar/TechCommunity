@@ -29,9 +29,9 @@ const Post = (props) => {
         <div className="intro-img">
           <img src={props.post.avatar} alt={props.post.name} />
         </div>
-        <h3 style={{textAlign:"center"}}>{props.post.name}</h3>
+        <h3 style={{ textAlign: "center" }}>{props.post.name}</h3>
       </div>
-      <div className="post-content">
+      <div className="post-content p-1">
         <p>{props.post.text}</p>
         <div className="post-control-section">
           <span onClick={props.likeHandler}>
@@ -57,7 +57,6 @@ const Post = (props) => {
             </span>
           ) : null}
         </div>
-
       </div>
     </div>
   );

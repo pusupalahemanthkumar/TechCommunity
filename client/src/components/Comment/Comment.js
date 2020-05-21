@@ -10,16 +10,16 @@ const Comment = (props) => {
   }
 
   return (
-    <div className="comment">
-      <div className="intro">
+    <div className="comment p-1">
+      <div className="intro p-1">
         <div className="comment-img">
           <img src={props.comment.avatar} alt={props.comment.name} />
         </div>
-        <div>
-          <p style={{textAlign:"center"}}>{props.comment.name}</p>
+        <div className="text-center">
+          <p>{props.comment.name}</p>
         </div>
       </div>
-      <div className="post-content">
+      <div className="post-content p-1">
         <p>{props.comment.text}</p>
       </div>
 

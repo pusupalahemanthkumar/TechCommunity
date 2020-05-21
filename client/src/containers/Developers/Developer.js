@@ -1,75 +1,35 @@
-// Importing Required Files And Packages Here.
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import axios from "axios";
-import { connect } from "react-redux";
-import { NavLink } from "react-router-dom";
-
 import Spinner from "../../components/UI/Spinner/Spinner";
 
-// Defining Dashboard COmponent Here.
-class Dashboard extends Component {
+class Developer extends Component {
   state = {
     profile: null,
     loading: true,
-    noprofile: false,
     error: false,
   };
   async componentDidMount() {
     try {
-      console.log(this.state);
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          "x-auth-token": this.props.token,
-        },
-      };
-      const res = await axios.get("/api/profile/me", config);
+      const res = await axios.get(
+        "/api/profile/user/"+this.props.match.params.id
+      );
       this.setState({
         profile: res.data,
         loading: false,
         error: false,
-        noprofile: false,
       });
-      console.log(this.state);
     } catch (err) {
-      if (
-        err.response &&
-        err.response.data.msg === "There is no profile for this User."
-      ) {
-        this.setState({
-          noprofile: true,
-          error: false,
-          loading: false,
-        });
-      } else {
-        console.log(err);
-        this.setState({
-          error: false,
-          loading: false,
-          noprofile: false,
-        });
-      }
+      console.log(err.response.data);
+      this.setState({
+        loading: false,
+        error: true,
+      });
     }
   }
   render() {
-    let profile = <Spinner />;
-    if (this.state.error) {
-      profile = (
-        <p className="text-center">
-          Something Went Wrong . Please reload the page.
-        </p>
-      );
-    }
-    if (this.state.noprofile) {
-      profile = (
-        <p className="text-center">
-          No Profile. Go to Edit Profile and create a Profile.
-        </p>
-      );
-    }
-    if (!this.state.loading && this.state.profile) {
-      profile = (
-        <div className="profile-container">
+      let data =<Spinner />
+      if(!this.state.loading && this.state.profile){
+          data =(<div className="profile-container">
           <div className="profile-intro">
             <div className="profile-img text-center">
               <img
@@ -185,37 +145,20 @@ class Dashboard extends Component {
             </ul>
           </div>
         </div>
-      );
-    }
-    return (
-      <Fragment>
-        <div className="container">
-          <br />
-          <div className="dashboard-nav ">
-            <ul>
-              <li>
-                <NavLink exact to="/dashboard/">
-                  Profile
-                </NavLink>
-              </li>
-              <li>
-                <NavLink exact to="/dashboard/edit-profile">
-                  Edit Profile
-                </NavLink>
-              </li>
-            </ul>
-          </div>
-        </div>
 
-        <div className="container">{profile}</div>
-      </Fragment>
-    );
+          )
+      }
+      if(this.state.error){
+          data =<p className="text-center">Some thing went wrong .</p>
+      }
+      return (
+          <div className="container py-1">
+              <br /> <br />
+              {data}
+
+          </div>
+      )
   }
 }
-const mapStateToProps = (state) => {
-  return {
-    token: state.auth.token,
-  };
-};
 
-export default connect(mapStateToProps)(Dashboard);
+export default Developer;
