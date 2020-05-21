@@ -1,6 +1,6 @@
 // Importing Required Files And Packages Here.
 import React, { Component, Fragment } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route} from "react-router-dom";
 // import { connect } from "react-redux";
 
 import UnAuthenticatedRoute from "./containers/routing/UnAuthenticatedRoute";
@@ -41,13 +41,11 @@ class App extends Component {
       <Fragment>
         <Layout>
           <Switch>
-          <Route exact path="/developers/:id" component={Developer} />
+            <Route exact path="/developers/:id" component={Developer} />
             <Route exact path="/developers" component={Developers} />
             <UnAuthenticatedRoute exact path="/register" component={Register} />
             <UnAuthenticatedRoute exact path="/" component={Showcase} />
             <UnAuthenticatedRoute exact path="/login" component={Login} />
-
-           
 
             <PrivateRoute exact path="/posts/:postId" component={SinglePost} />
             <PrivateRoute exact path="/posts" component={Posts} />

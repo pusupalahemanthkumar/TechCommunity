@@ -15,6 +15,7 @@ class Dashboard extends Component {
     error: false,
   };
   async componentDidMount() {
+    if(this.props.token){
     try {
       console.log(this.state);
       const config = {
@@ -50,6 +51,7 @@ class Dashboard extends Component {
         });
       }
     }
+  }
   }
   render() {
     let profile = <Spinner />;
