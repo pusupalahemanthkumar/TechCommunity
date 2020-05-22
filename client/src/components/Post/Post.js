@@ -31,7 +31,7 @@ const Post = (props) => {
         </div>
         <h3 style={{ textAlign: "center" }}>{props.post.name}</h3>
       </div>
-      <div className="post-content p-1">
+      <div className="post-content">
         <p>{props.post.text}</p>
         <div className="post-control-section">
           <span onClick={props.likeHandler}>
@@ -42,8 +42,7 @@ const Post = (props) => {
             <i className="fas fa-thumbs-down"></i>
           </span>
           <span onClick={props.viewHandler}>
-            <i className="fas fa-comments"></i>
-            {props.post.comments ? props.post.comments.length : 0}
+            <i className="fas fa-comments"></i>{props.post.comments ? props.post.comments.length : 0}
           </span>
 
           {userId === props.post.user ? (

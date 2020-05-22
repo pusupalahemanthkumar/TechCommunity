@@ -62,6 +62,7 @@ class Developer extends Component {
             <p>{this.state.profile.about}</p>
           </div>
           <div className="profile-social-icons">
+          <h3 className="text-center">Social Media</h3>
             <ul>
               { this.state.profile.social && this.state.profile.social.github ? (
                 <li>
@@ -151,7 +152,7 @@ class Developer extends Component {
           data =<p className="text-center">Some thing went wrong .</p>
       }
       return (
-          <div className="container py-1">
+          <div className="container">
               <br /> <br />
               {data}
 

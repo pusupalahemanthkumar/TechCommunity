@@ -37,7 +37,7 @@ class Developers extends Component {
               </div>
               <h3 className="text-center">{dev.user.name}</h3>
             </div>
-            <div className="p-1">
+            <div className="">
               <p>{dev.about}</p>
               <div className="text-center">
                 <Link to={`/developers/${dev.user._id}`} className="btn">
@@ -53,7 +53,7 @@ class Developers extends Component {
       data= <p>Some thing went wrong . try again after some time.</p>
     }
     return (
-      <div className="container py-1">
+      <div className="container">
         <br /> <br />
         {data}
       </div>

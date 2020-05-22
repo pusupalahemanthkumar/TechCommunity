@@ -11,9 +11,9 @@ import NavigationItem from "./NavigationItem/NavigationItem";
 const navigationItems = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <Fragment>
-      <NavigationItem link="/dashboard">Dashboard</NavigationItem>
-      <NavigationItem link="/developers">Developers</NavigationItem>
       <NavigationItem link="/posts">Posts</NavigationItem>
+      <NavigationItem link="/developers">Developers</NavigationItem>
+      <NavigationItem link="/dashboard">Profile</NavigationItem>
       <NavigationItem link="/posts" onClick={logout}>
         <i className="fas fa-sign-out-alt"></i>{" "}
         <span className="hide-sm">Logout</span>

@@ -97,11 +97,12 @@ class Dashboard extends Component {
               </p>
             ) : null}
           </div>
-          <div className="profile-bio text-center py-1">
+          <div className="profile-bio text-center">
             <h3 className="text-center">About</h3>
             <p>{this.state.profile.about}</p>
           </div>
           <div className="profile-social-icons">
+          <h3 className="text-center">Social Media</h3>
             <ul>
               {  this.state.profile.social && this.state.profile.social.github ? (
                 <li>
