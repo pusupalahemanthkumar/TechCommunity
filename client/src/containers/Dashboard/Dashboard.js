@@ -17,7 +17,6 @@ class Dashboard extends Component {
   async componentDidMount() {
     if(this.props.token){
     try {
-      console.log(this.state);
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -31,7 +30,6 @@ class Dashboard extends Component {
         error: false,
         noprofile: false,
       });
-      console.log(this.state);
     } catch (err) {
       if (
         err.response &&
@@ -43,7 +41,6 @@ class Dashboard extends Component {
           loading: false,
         });
       } else {
-        console.log(err);
         this.setState({
           error: false,
           loading: false,
@@ -106,7 +103,7 @@ class Dashboard extends Component {
           </div>
           <div className="profile-social-icons">
             <ul>
-              {this.state.profile.social.github ? (
+              {  this.state.profile.social && this.state.profile.social.github ? (
                 <li>
                   <span>
                     <a href={this.state.profile.social.github} >
@@ -118,7 +115,7 @@ class Dashboard extends Component {
                   </span>
                 </li>
               ) : null}
-              {this.state.profile.social.linkedin ? (
+              {  this.state.profile.social && this.state.profile.social.linkedin ? (
                 <li>
                   <span>
                     <a
@@ -133,7 +130,7 @@ class Dashboard extends Component {
                   </span>
                 </li>
               ) : null}
-              {this.state.profile.social.facebook ? (
+              {   this.state.profile.social && this.state.profile.social.facebook ? (
                 <li>
                   <span>
                     <a
@@ -148,7 +145,7 @@ class Dashboard extends Component {
                   </span>
                 </li>
               ) : null}
-              {this.state.profile.social.instagram ? (
+              {   this.state.profile.social &&this.state.profile.social.instagram ? (
                 <li>
                   <span>
                     <a
@@ -171,7 +168,7 @@ class Dashboard extends Component {
           <h3 className="text-center">Skills</h3>
           <div className="profile-skills">
             <ul>
-              {this.state.profile.skills.map((skill) => {
+              {  this.state.profile.skills && this.state.profile.skills.map((skill) => {
                 return (
                   <li key={skill}>
                     <span>

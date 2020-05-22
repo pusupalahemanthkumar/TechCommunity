@@ -19,7 +19,6 @@ class Developer extends Component {
         error: false,
       });
     } catch (err) {
-      console.log(err.response.data);
       this.setState({
         loading: false,
         error: true,
@@ -58,13 +57,13 @@ class Developer extends Component {
               </p>
             ) : null}
           </div>
-          <div className="profile-bio text-center py-1">
+          <div className="profile-bio text-center">
             <h3 className="text-center">About</h3>
             <p>{this.state.profile.about}</p>
           </div>
           <div className="profile-social-icons">
             <ul>
-              {this.state.profile.social.github ? (
+              { this.state.profile.social && this.state.profile.social.github ? (
                 <li>
                   <span>
                     <a href={this.state.profile.social.github} >
@@ -76,7 +75,7 @@ class Developer extends Component {
                   </span>
                 </li>
               ) : null}
-              {this.state.profile.social.linkedin ? (
+              { this.state.profile.social && this.state.profile.social.linkedin ? (
                 <li>
                   <span>
                     <a
@@ -91,7 +90,7 @@ class Developer extends Component {
                   </span>
                 </li>
               ) : null}
-              {this.state.profile.social.facebook ? (
+              { this.state.profile.social && this.state.profile.social.facebook ? (
                 <li>
                   <span>
                     <a
@@ -106,7 +105,7 @@ class Developer extends Component {
                   </span>
                 </li>
               ) : null}
-              {this.state.profile.social.instagram ? (
+              { this.state.profile.social && this.state.profile.social.instagram ? (
                 <li>
                   <span>
                     <a
@@ -129,7 +128,7 @@ class Developer extends Component {
           <h3 className="text-center">Skills</h3>
           <div className="profile-skills">
             <ul>
-              {this.state.profile.skills.map((skill) => {
+              { this.state.profile.skills && this.state.profile.skills.map((skill) => {
                 return (
                   <li key={skill}>
                     <span>

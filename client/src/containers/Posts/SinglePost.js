@@ -34,7 +34,6 @@ class SinglePost extends PureComponent {
     });
     try {
       config.headers["x-auth-token"] = this.props.token;
-      console.log(config);
       const res = await axios.get(
         `/api/posts/${this.props.match.params.postId}`,
         config

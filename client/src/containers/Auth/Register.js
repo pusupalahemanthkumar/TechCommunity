@@ -37,7 +37,7 @@ class Register extends Component {
       email: this.state.email,
       password: this.state.password,
     };
-    console.log(authData);
+    // console.log(authData);
     this.props.register(authData);
 
   };

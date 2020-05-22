@@ -26,19 +26,15 @@ class Posts extends PureComponent {
   };
 
   async componentDidMount() {
-    console.log("fetch stated..");
     await this.fetchData();
-    console.log("fetched Data.");
   }
 
   // Utility Methods Here
   fetchData = async () => {
-    console.log("In fetchData");
     this.setState({
       loading: true,
     });
     config.headers["x-auth-token"]=this.props.token;
-    console.log(config);
     try {
       const res = await axios.get("/api/posts", config);
       this.setState({
@@ -47,7 +43,6 @@ class Posts extends PureComponent {
         error: false,
       });
     } catch (err) {
-      console.log(err.response.data.error);
       this.props.setAlert("Couldn't load posts. Reload the page", "danger");
 
       this.setState({
@@ -62,7 +57,6 @@ class Posts extends PureComponent {
     const postData = {
       text: this.state.text,
     };
-    console.log(postData);
     try {
       const res = await axios.post("api/posts", postData, config);
       const updatedPosts = [...this.state.posts];
@@ -80,7 +74,6 @@ class Posts extends PureComponent {
         "danger"
       );
 
-      console.log(err.response);
     }
   };
   onChangeHandler = (e) => {
@@ -90,7 +83,6 @@ class Posts extends PureComponent {
     });
   };
   viewHandler = (postId) => {
-    console.log(postId);
     this.props.history.push("/posts/" + postId);
   };
   likeHandler = async (postId) => {
@@ -111,7 +103,6 @@ class Posts extends PureComponent {
         return this.props.setAlert("You already liked post.", "success");
       } else {
         this.props.setAlert("some error occured.", "danger");
-        console.log(err.response.error.msg);
       }
     }
   };
@@ -134,7 +125,7 @@ class Posts extends PureComponent {
         return;
       } else {
         this.props.setAlert("some error occured.", "danger");
-        console.log(err.response);
+        // console.log(err.response);
       }
     }
   };
@@ -150,7 +141,7 @@ class Posts extends PureComponent {
       this.props.setAlert("You deleted a post.", "success");
     } catch (err) {
       this.props.setAlert("some error occured.", "danger");
-      console.log(err.response);
+      // console.log(err.response);
     }
   };
 
@@ -174,9 +165,9 @@ class Posts extends PureComponent {
     if (this.state.loading) {
       posts = <Spinner />;
     }
-    // if (this.state.error) {
-    //   posts = <p>Couldn't Load. Try again after sometime.</p>;
-    // }
+    if (this.state.error) {
+      posts = <p>Couldn't Load. Try again after sometime.</p>;
+    }
     return (
       <div className="container py-1">
         <div className="form-wrap">

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 import axios from "axios";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
@@ -15,9 +15,14 @@ class Developers extends Component {
       this.setState({
         developers: res.data,
         loading: false,
+        error: false,
       });
     } catch (err) {
       console.log(err.response);
+      this.setState({
+        loading: false,
+        error: true,
+      });
     }
   }
   render() {
@@ -43,6 +48,9 @@ class Developers extends Component {
           </div>
         );
       });
+    }
+    if(this.state.error){
+      data= <p>Some thing went wrong . try again after some time.</p>
     }
     return (
       <div className="container py-1">

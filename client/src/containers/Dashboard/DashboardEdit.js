@@ -40,18 +40,33 @@ class DashboardEdit extends Component {
         website: res.data.website ? res.data.website : "",
         about: res.data.about ? res.data.about : "",
         skills: res.data.skills ? res.data.skills.join(" , ") : "",
-        facebook: res.data.social.facebook ? res.data.social.facebook : "",
-        github: res.data.social.github ? res.data.social.github : "",
-        instagram: res.data.social.instagram ? res.data.social.instagram : "",
-        linkedin: res.data.social.linkedin ? res.data.social.linkedin : "",
+        facebook:
+          res.data.social && res.data.social.facebook
+            ? res.data.social.facebook
+            : "",
+        github:
+          res.data.social && res.data.social.github
+            ? res.data.social.github
+            : "",
+        instagram:
+          res.data.social && res.data.social.instagram
+            ? res.data.social.instagram
+            : "",
+        linkedin:
+          res.data.social && res.data.social.linkedin
+            ? res.data.social.linkedin
+            : "",
       };
       this.setState({
         formData: data,
         loading: false,
       });
     } catch (err) {
-      console.log(err.response.data);
-      if (err.response.data.msg === "There is no profile for this User.") {
+      console.log(err);
+      if (
+        err.response &&
+        err.response.data.msg === "There is no profile for this User."
+      ) {
         this.setState({
           loading: false,
           error: false,
