@@ -1,4 +1,4 @@
 {
-    "MONGO_URI":"mongodb+srv://hemanth:hemanth@cluster0-xuuie.mongodb.net/MERN-Template",
+    "MONGO_URI":"mongodb+srv://hemanth:hemanth@cluster0-xuuie.mongodb.net/TechCommunity",
     "JWT_SECRET":"Mysecret"
 }
