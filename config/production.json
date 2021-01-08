@@ -1,4 +1,4 @@
 {
-    "MONGO_URI":"mongodb+srv://hemanth:hemanth@cluster0-xuuie.mongodb.net/TechCommunity",
+    "MONGO_URI":"Place MongoDb URI",
     "JWT_SECRET":"Mysecret"
 }
